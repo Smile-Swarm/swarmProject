@@ -1,0 +1,2 @@
+PID & simplemove: Pre-define a coordinate to move to in each python script. 
+AStar & DAstar: Uses a Pre-defined map (empty_wall.launch in ROSDS) that must be changed for different environments.
