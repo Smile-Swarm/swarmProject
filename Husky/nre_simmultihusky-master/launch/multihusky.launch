@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<!-- 
+A launch file for setting up control of a Husky.
+-->
+<launch>
+
+
+  <node name="rqt_console" pkg="rqt_console" type="rqt_console" output="screen" />
+
+
+<!-- Gazebo -->
+<arg name="world_name" default="worlds/empty.world"/>
+<include file="$(find gazebo_ros)/launch/empty_world.launch">
+  <arg name="world_name" value="$(arg world_name)"/> <!-- world_name is wrt GAZEBO_RESOURCE_PATH environment variable -->
+  <arg name="paused" value="false"/>
+  <arg name="use_sim_time" value="true"/>
+  <arg name="gui" value="true"/>
+  <arg name="headless" value="false"/>
+  <arg name="debug" value="false"/>
+</include>
+
+
+<group ns="h1">
+  <include file="$(find nre_simmultihusky)/launch/husky.launch">
+    <arg name="namespace" value="h1" />
+    <arg name="initX" value="2" />
+    <arg name="initY" value="2" />
+    <arg name="initYaw" value="0" />
+  </include>
+</group>
+
+<group ns="h2">
+  <include file="$(find nre_simmultihusky)/launch/husky.launch">
+    <arg name="namespace" value="h2" />
+    <arg name="initX" value="-3" />
+    <arg name="initY" value="-3" />
+    <arg name="initYaw" value="3.14" />
+  </include>
+</group>
+
+
+<!--******************************-->
+<!-- Debugging tools -->
+<!--******************************-->
+
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find nre_simmultihusky)/rviz/duohusky.rviz" output="screen"/>
+<node name="rqt_topic" pkg="rqt_topic" type="rqt_topic" output="screen" />
+<node name="rqt_graph" pkg="rqt_graph" type="rqt_graph" output="screen" />
+<node name="rqt_tf_tree" pkg="rqt_tf_tree" type="rqt_tf_tree" output="screen" />
+
+</launch>

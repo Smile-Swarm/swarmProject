@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!-- 
+Husky definition for Gazebo simultion suitable for multi-robot sim.
+Note the namespace (nsp) and tf_prefix (tfpre) are provided as 
+input arguments and then propogated appropriately.
+-->
+
+<robot name="husky_robot_gazebo" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:arg name="laser_enabled" default="true" />
+  <xacro:arg name="ur5_enabled" default="false" />
+  <xacro:arg name="kinect_enabled" default="false" />
+  <xacro:arg name="nsp" default="h0" />
+  <xacro:arg name="tfpre" default="h0_tf" />
+  
+  <xacro:include filename="$(find husky_description)/urdf/husky.urdf.xacro" />
+  <xacro:include filename="$(find husky_gazebo)/urdf/accessories/kinect_camera.gazebo.xacro"/>
+  <gazebo>
+    <plugin name="ground_truth" filename="libgazebo_ros_p3d.so">
+      <frameName>map</frameName>
+      <bodyName>base_link</bodyName>
+      <topicName>base_pose_ground_truth</topicName>
+      <updateRate>30.0</updateRate>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
+      <robotNamespace>/$(arg nsp)</robotNamespace>
+      <frameId>$(arg tfpre)/base_link</frameId>
+      <updateRate>50.0</updateRate>
+      <bodyName>base_link</bodyName>
+      <topicName>imu/data</topicName>
+      <accelDrift>0.005 0.005 0.005</accelDrift>
+      <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
+      <rateDrift>0.005 0.005 0.005 </rateDrift>
+      <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise>
+      <headingDrift>0.005</headingDrift>
+      <headingGaussianNoise>0.005</headingGaussianNoise>
+    </plugin>
+  </gazebo>
+  
+  <gazebo>
+    <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
+      <updateRate>40</updateRate>
+      <robotNamespace>/$(arg nsp)</robotNamespace>
+      <frameId>$(arg tfpre)/base_link</frameId>
+      <bodyName>base_link</bodyName>
+      <topicName>navsat/fix</topicName>
+      <velocityTopicName>navsat/vel</velocityTopicName>
+      <referenceLatitude>49.9</referenceLatitude>
+      <referenceLongitude>8.9</referenceLongitude>
+      <referenceHeading>0</referenceHeading>
+      <referenceAltitude>0</referenceAltitude>
+      <drift>0.0001 0.0001 0.0001</drift>
+    </plugin>
+  </gazebo>
+
+  <!-- Gazebo plugin for ROS Control -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/$(arg nsp)</robotNamespace>
+    </plugin>
+  </gazebo>
+  
+  <xacro:husky_robot />
+  
+  <xacro:husky_robot_gazebo />
+  
+</robot>
