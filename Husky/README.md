@@ -13,7 +13,7 @@ Clone above packages into your workspace:
 "source devel/setup.bash"
 
 Fix husky.urdf.xacro file:
-In IDE find catkin_ws/src/husky/husky_description/urdf/husky.urdf.xacro and delete the last optional argument line
+In IDE find catkin_ws/src/husky/husky_description/urdf/husky.urdf.xacro and delete the line at the very bottom under "optional custom includes"
 
 For one husky: "roslaunch husky_gazebo husky_playpen.launch"
 
