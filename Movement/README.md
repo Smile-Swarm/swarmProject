@@ -1,6 +1,9 @@
 First create a controller package: "catkin_create_pkg controller rospy" .
+
 Then place python scripts in controller's "src" folder.
+
 Change permissions: "chmod +x script.py" .
+
 Then run "rosrun controller script.py" in shell.
 
 PID: Pre-define a coordinate to move to in python script. Robot's movement is controlled by the PID.
