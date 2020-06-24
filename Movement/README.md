@@ -6,6 +6,7 @@ Change permissions: "chmod +x script.py" .
 
 Then run "rosrun controller script.py" in shell.
 
+
 PID: Pre-define a coordinate to move to in python script. Robot's movement is controlled by the PID.
 
 simplemove: Pre-define a coordinate to move to in python script. Robot stops and rotates before moving forward towards goal.
