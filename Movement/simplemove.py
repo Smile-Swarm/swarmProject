@@ -5,7 +5,6 @@ from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import Point, Twist
 from math import atan2
-from astar import *
  
 x = 0.0
 y = 0.0 
