@@ -1,0 +1,104 @@
+﻿#! /usr/bin/env python
+
+
+#Problem: How to move position to position?
+#I.E.: Pos (0,0) -move-> Pos (5,5)
+
+
+import rospy
+from nav_msgs.msg import Odometry #To enable us to get the message
+from tf.transformations import euler_from_quaternion #To enable python command
+from geometry_msgs.msg import Point, Twist
+from math import atan2 #To enable function uses
+ 
+x = 0.0
+y = 0.0 
+theta = 0.0
+ 
+# Which will store the current position of the robot
+def newOdom(msg):
+    global x
+    global y
+    global theta
+ 
+    # Values x and y are taken from the specific message 
+    # To confirm:
+    #       -Open up robot sim
+    #       -Confirm simulation, by checking package summary for [robot]
+    #           -ROS command: rostopic list
+    #       -Use ROS command: rosmeg show '[Odometry]'
+    #       -Confirm x and y locations
+    x = msg.pose.pose.position.x
+    y = msg.pose.pose.position.y
+ 
+     # Position of theta is the rotation orientation of the robot in the z axis
+    # but it is in Quaterion.
+    rot_q = msg.pose.pose.orientation
+    (roll, pitch, theta) = euler_from_quaternion([rot_q.x, rot_q.y, rot_q.z, rot_q.w])
+ 
+rospy.init_node("speed_controller")
+# At this point the position of the robot is always 
+
+
+# Strategy:
+#   -If robot is not facing the position,
+#       then rotate the robot in place till facing desired pos.
+#   -Move forward towards the desired destination
+#   -Stop once reached
+
+
+sub = rospy.Subscriber("/odometry/filtered", Odometry, newOdom)
+pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 1)
+ 
+# Initialize to hold the message of Twist
+speed = Twist()
+
+
+# Rate of 4 Hz
+r = rospy.Rate(4)
+ 
+# Define the goal position
+#   2 components
+goal = Point()
+goal.x = 5
+goal.y = 5
+ 
+# Main loop of controller
+while not rospy.is_shutdown():
+    # Values to compare to if facing or not
+    inc_x = goal.x - x
+    inc_y = goal.y - y
+ 
+    # We need an angle to compare to our angle of rotation
+    angle_to_goal = atan2(inc_y, inc_x)
+    
+    # If not facing
+    #if inc_x == 0 and inc_y == 0:
+#        speed.linear.x = 0.0
+#       speed.angular.z = 0.0
+    # If not facing
+    if abs(angle_to_goal - theta) > 0.1:
+        speed.linear.x = 0.0    #Stay in place
+        speed.angular.z = 0.3   #Rotate
+    # Else if facing goal
+    else:
+        speed.linear.x = 0.5    #Move forward
+        speed.angular.z = 0.0   #Do not rotate
+ 
+    pub.publish(speed)
+    r.sleep()
+
+
+
+
+Reference:
+-https://youtu.be/eJ4QPrYqMlw
+-https://www.theconstructsim.com/ros-qa-053-how-to-move-a-robot-to-a-certain-point-using-twist/
+-ROS Development Studio Webshell
+-ROS D.S. Tutorial videos
+
+
+Software:
+Gazebo - Husky Robot
+RVis - localization and visualization
+Linux Shell
