@@ -63,6 +63,30 @@ class myMatrixA:
         self.matrixCol = data
         print "Matrix col from worker A\n"
         print(self.matrixCol)
+
+class myMatrixB:
+    def __init__(self):
+        self.matrix = 0
+        self.matrixRow = 0
+        self.matrixCol = 0
+        self.subMatrix = rospy.Subscriber("floatsBToMaster", numpy_msg(Floats), self.callback)
+        self.subRow = rospy.Subscriber("rowBToMaster", Int16, self.grabRow)
+        self.subCol = rospy.Subscriber("colBToMaster", Int16, self.grabCol)
+
+    def callback(self, data):
+        self.matrix = data
+        print "Matrix from worker B\n"
+        print(self.matrix)
+
+    def grabRow(self, data):
+        self.matrixRow = data
+        print "Matrix row from worker B\n"
+        print(self.matrixRow)
+
+    def grabCol(self, data):
+        self.matrixCol = data
+        print "Matrix col from worker B\n"
+        print(self.matrixCol)
    
 def initialize():
     rospy.init_node('master', anonymous=True)
@@ -76,7 +100,6 @@ def talker():
     pubMatrixBRow = rospy.Publisher('rowBToWorker', Int16, queue_size=9, latch = True)
     pubMatrixBCol = rospy.Publisher('colBToWorker', Int16, queue_size=8, latch = True)
 
-    ##rospy.init_node('talker', anonymous=True)
     rate = rospy.Rate(1) # 10hz
     connectionsReady = False
 
@@ -84,41 +107,42 @@ def talker():
         connectionMatrixA = pubMatrixA.get_num_connections()
         connectionMatrixARow = pubMatrixARow.get_num_connections()
         connectionMatrixACol = pubMatrixACol.get_num_connections()
-        if connectionMatrixA > 0 and connectionMatrixARow > 0 and connectionMatrixACol > 0:
+
+        connectionMatrixB = pubMatrixB.get_num_connections()
+        connectionMatrixBRow = pubMatrixBRow.get_num_connections()
+        connectionMatrixBCol = pubMatrixBCol.get_num_connections()
+
+        if connectionMatrixA > 0 and connectionMatrixARow > 0 and connectionMatrixACol > 0 and connectionMatrixB > 0 and connectionMatrixBRow > 0 and connectionMatrixBCol > 0:
             pubMatrixA.publish(sendA)
             pubMatrixARow.publish(rowA)
             pubMatrixACol.publish(colA)
             print "Messages to Worker A published. \n"
+
+            pubMatrixB.publish(sendB)
+            pubMatrixBRow.publish(rowB)
+            pubMatrixBCol.publish(colB)
+            print "Messages to Worker B published. \n"
+
             connectionsReady = True
         else:
             rate.sleep()
 
 
-
-   
-    ##pubMatrixA.publish(sendA)
-    ##pubMatrixARow.publish(rowA)
-    ##pubMatrixACol.publish(colA)
-
-    ##print "Messages to Worker A published. \n"
-
-    ##pubMatrixB.publish(sendB)
-    ##pubMatrixBRow.publish(rowB)
-    ##pubMatrixBCol.publish(colB)
-
-def listenerA(args):
-    obc = myMatrixA()
+def listener(args):
+    obcA = myMatrixA()
+    obcB = myMatrixB()
     try:
         rospy.spin()
-        #printSomething()
         print("\n\n\n\n\n\n\n\n")
-        print"Received matrix:\n", (obc.matrix)
-        #print(obc.matrixRow)
-        #print(obc.matrixCol)
-        #reshapeVal = obc.matrixRow.data * obc.matrixCol.data
-        #print(reshapeVal)
-        newMatrix = obc.matrix.data.reshape([obc.matrixRow.data, obc.matrixCol.data])
-        print"\nDecoded Matrix: \n", (newMatrix)
+        print"Received matrix:\n", (obcA.matrix)
+        newMatrixA = obcA.matrix.data.reshape([obcA.matrixRow.data, obcA.matrixCol.data])
+        print"\nDecoded Matrix: \n", (newMatrixA)
+
+        print("\n\n\n\n\n\n\n\n")
+        print"Received matrix:\n", (obcB.matrix)
+        newMatrixB = obcB.matrix.data.reshape([obcB.matrixRow.data, obcB.matrixCol.data])
+        print"\nDecoded Matrix: \n", (newMatrixB)
+
     except KeyboardInterrupt:
         print("Shutting down")
     
@@ -126,4 +150,4 @@ def listenerA(args):
 if __name__ == '__main__':
     initialize()
     talker()
-    listenerA(sys.argv)
+    listener(sys.argv)
