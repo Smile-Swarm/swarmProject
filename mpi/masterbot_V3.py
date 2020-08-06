@@ -31,6 +31,9 @@ print"\nsendMatrix A:\n", (sendA)
 matrixA_row0 = a[0]
 print"\nPrinting first row of matrix A:\n", matrixA_row0
 
+matrixA_row1 = a[1]
+print"\nPrinting second row of matrix A:\n", matrixA_row1
+
 #-------------------------------------------------------------------------------------
 print"---------------------------------------------------"
 b = numpy.array([[5.9, 6.7] , [7.8, 8.9]], dtype=numpy.float32)
@@ -55,6 +58,7 @@ def talker():
     pubMatrixB = rospy.Publisher('floatsB', numpy_msg(Floats), queue_size=10, latch = True)
     pubMatrixBRow = rospy.Publisher('rowB', Int16, queue_size=9, latch = True)
     pubMatrixBCol = rospy.Publisher('colB', Int16, queue_size=8, latch = True)
+    pubMatrixA_Row1 = rospy.Publisher('matrixA_Row1', numpy_msg(Floats), queue_size=10, latch = True)
 
     rospy.init_node('talker', anonymous=True)
     r = rospy.Rate(1) # 10hz
@@ -67,6 +71,7 @@ def talker():
         pubMatrixB.publish(sendB)
         pubMatrixBRow.publish(rowB)
         pubMatrixBCol.publish(colB)
+        pubMatrixA_Row1.publish(matrixA_row1)
         r.sleep()
 
 if __name__ == '__main__':
