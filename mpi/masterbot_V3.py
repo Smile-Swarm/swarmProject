@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-# Version 3: Enabling sending a row of specific matrix while listening to other matrix
-
 PKG = 'numpy_tutorial'
 import roslib; roslib.load_manifest(PKG)
 
 import rospy
+import sys
 
 from std_msgs.msg import Int16
 
@@ -28,11 +27,13 @@ print"\nThis is value to reshape sendMatrix for a: ", (newShapeA)
 sendA = a.reshape(newShapeA)
 print"\nsendMatrix A:\n", (sendA)
 
+## //Version 3 added
 matrixA_row0 = a[0]
 print"\nPrinting first row of matrix A:\n", matrixA_row0
 
 matrixA_row1 = a[1]
 print"\nPrinting second row of matrix A:\n", matrixA_row1
+## //Ver3 end
 
 #-------------------------------------------------------------------------------------
 print"---------------------------------------------------"
@@ -53,12 +54,16 @@ def talker():
     pubMatrixA = rospy.Publisher('floatsA', numpy_msg(Floats), queue_size=10, latch = True)
     pubMatrixARow = rospy.Publisher('rowA', Int16, queue_size=9, latch = True)
     pubMatrixACol = rospy.Publisher('colA', Int16, queue_size=8, latch = True)
+    ## //Version 3 added
     pubMatrixA_Row0 = rospy.Publisher('matrixA_Row0', numpy_msg(Floats), queue_size=10, latch = True)
+    ## //Ver3 end
 
     pubMatrixB = rospy.Publisher('floatsB', numpy_msg(Floats), queue_size=10, latch = True)
     pubMatrixBRow = rospy.Publisher('rowB', Int16, queue_size=9, latch = True)
     pubMatrixBCol = rospy.Publisher('colB', Int16, queue_size=8, latch = True)
+    ## //Version 3 added
     pubMatrixA_Row1 = rospy.Publisher('matrixA_Row1', numpy_msg(Floats), queue_size=10, latch = True)
+    ## //Ver3 end
 
     rospy.init_node('talker', anonymous=True)
     r = rospy.Rate(1) # 10hz
@@ -66,12 +71,16 @@ def talker():
         pubMatrixA.publish(sendA)
         pubMatrixARow.publish(rowA)
         pubMatrixACol.publish(colA)
+        ## //Version 3 added
         pubMatrixA_Row0.publish(matrixA_row0)
+        ## //Ver3 end
 
         pubMatrixB.publish(sendB)
         pubMatrixBRow.publish(rowB)
         pubMatrixBCol.publish(colB)
+        ## //Version 3 added
         pubMatrixA_Row1.publish(matrixA_row1)
+        ## //Ver3 end
         r.sleep()
 
 if __name__ == '__main__':
