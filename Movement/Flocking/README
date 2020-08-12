@@ -4,8 +4,10 @@ copy both multi_robot package and flocking_large package into ros
 
 2) Open gazebo
 
-3) In second shell, "roslaunch flocking_large flockng.main"
+3) In second shell, "roslaunch flocking flockng.launch"
 
 4) In third shell, "rosrun teleop_twist_keyboard teleop_twist_keyboard.py /cmd_vel:=/robot1/cmd_vel" to control the leader robot movement
 
-currently multi_robot package is set to deploy 4 robots (can easily be changed in robots.launch file, if changed then flocking_large must be adapted as well)
+currently multi_robot package is set to deploy 3 robots (can easily be changed in robots.launch file, if changed then flocking must be adapted as well)
+
+*currently working on flocking code that will work for any number of robots*
