@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+    <arg name="follower_model_name" default="robot2" />
+    <arg name="model_to_be_followed_name" default="robot1" />
+
+    <node name="follower_node" pkg="flocking" type="fol.py" args="$(arg follower_model_name) $(arg model_to_be_followed_name)" output="screen"/>
+</launch>

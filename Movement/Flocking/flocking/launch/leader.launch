@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+    <node name="leader_node" pkg="flocking" type="lead.py" args="" output="screen"/>
+</launch>
