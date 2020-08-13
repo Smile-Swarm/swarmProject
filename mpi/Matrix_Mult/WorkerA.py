@@ -21,7 +21,7 @@ def callback(data):
 def grabVect(data):
     global vect
     vect = data
-    print(vect)
+    #print(vect)
 
 def grabRow(data):
     global matrixRow
@@ -46,23 +46,25 @@ ctrl_c = False
 #if in shutdown, completely stop movement
 def shutdownhook():
     global ctrl_c
-    print "shutdown time! Stop the robot"
+    print "shutdown time!"
 
     ctrl_c = True
 
 rospy.on_shutdown(shutdownhook)
 
+count = 0
 while not ctrl_c:
     try:
+        count += 1
         ## Version 3: added matrix mult. and variables to print
         rospy.sleep(5)
-        print("\n\n\n\n\n\n\n\n")
-        print"Received matrix:\n", (matrix)
         newMatrix = matrix.data.reshape([matrixRow.data, matrixCol.data])
         myVect = vect.data
         result = myVect.dot(newMatrix)
-        print"\nDecoded Matrix: \n", (newMatrix), "\n\nVector(Row of Matrix A):\n", (myVect)
-        print"\n\n Vector dot product matrix", myVect.dot(newMatrix)
+        if count == 1:
+            print"\nReceived matrix:\n", (matrix.data)
+            print"\nDecoded Matrix: \n", (newMatrix), "\n\nVector(Row of Matrix A):\n", (myVect)
+            print"\nVector dot product matrix", myVect.dot(newMatrix)
         pub.publish(result)
     except KeyboardInterrupt:
         print("Shutting down")
