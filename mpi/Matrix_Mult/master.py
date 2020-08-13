@@ -20,6 +20,7 @@ newShapeA = rowA * colA
 print"\nThis is value to reshape sendMatrix for a: ", (newShapeA)
 sendA = a.reshape(newShapeA)
 print"\nsendMatrix A:\n", (sendA)
+print(type(a))
 
 ## //Version 3 added
 matrixA_row0 = a[0]
@@ -44,10 +45,16 @@ sendB = b.reshape(newShapeB)
 print"\nsendMatrix B:\n", (sendB)
 #------------------------------------------------------------------------------------
 
-def callback(msg):
-    global row
-    row = msg
-    print(row)
+resultA = 0
+resultB = 0
+
+def callbackA(msg):
+    global resultA
+    resultA = msg
+
+def callbackB(msg):
+    global resultB
+    resultB = msg
 
 rospy.init_node('master')
 pubMatrixA = rospy.Publisher('floatsA', numpy_msg(Floats), queue_size=10, latch = True)
@@ -63,11 +70,22 @@ pubMatrixBCol = rospy.Publisher('colB', Int16, queue_size=8, latch = True)
 ## //Version 3 added
 pubMatrixA_Row1 = rospy.Publisher('matrixA_Row1', numpy_msg(Floats), queue_size=10, latch = True)
 ## //Ver3 end
-sub = rospy.Subscriber('result', numpy_msg(Floats), callback)
+sub1 = rospy.Subscriber("resultA", numpy_msg(Floats), callbackA)
+sub2 = rospy.Subscriber("resultB", numpy_msg(Floats), callbackB)
 
 rate = rospy.Rate(1)
+ctrl_c = False
+#if in shutdown, completely stop movement
+def shutdownhook():
+    global ctrl_c
+    print "shutdown time! Stop the robot"
 
-while not rospy.is_shutdown():
+    ctrl_c = True
+
+rospy.on_shutdown(shutdownhook)
+final = numpy.empty((2,2), dtype=numpy.float32)
+i = 0
+while not ctrl_c:
     pubMatrixA.publish(sendA)
     pubMatrixARow.publish(rowA)
     pubMatrixACol.publish(colA)
@@ -80,6 +98,14 @@ while not rospy.is_shutdown():
     pubMatrixBCol.publish(colB)
     ## //Version 3 added
     pubMatrixA_Row1.publish(matrixA_row1)
+    print(resultA)
+    print(resultB)
+    #print(type(resultA))
+    i = i + 1
+    if i > 5:
+        final[0] = resultA.data
+        final[1] = resultB.data
+        print("Multiplied Matrix:")
+        print(final)
     ## //Ver3 end
     rate.sleep()
-    
