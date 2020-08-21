@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+
+    <include file="$(find n_flocking)/launch/leader.launch"/>
+    <include file="$(find n_flocking)/launch/follower.launch">
+        <arg name="model_to_be_followed_name" value="robot1" />
+        <arg name="follower_model_name" value="robot2" />
+    </include>
+    <include file="$(find n_flocking)/launch/follower2.launch">
+        <arg name="model_to_be_followed_name" value="robot1" />
+        <arg name="follower_model_name" value="robot3" />
+    </include>
+</launch>
