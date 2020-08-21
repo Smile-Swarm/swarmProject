@@ -1,3 +1,9 @@
+*n_flocking* most up-to-date (works for n number of robots)
+
+*aerial* Smooth Turn Model (use with flocking)
+
+*THE REST ARE SIMPLE SINGLE SCRIPT CONTROLS*
+
 First create a controller package: "catkin_create_pkg controller rospy" .
 
 Then place python scripts in controller's "src" folder.
