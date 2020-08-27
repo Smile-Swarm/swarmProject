@@ -8,7 +8,6 @@ All position vectors are measured in meters
 
 """
 
-# import rospy
 import numpy as np
 
 
