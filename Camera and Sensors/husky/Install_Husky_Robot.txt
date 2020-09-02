@@ -1,0 +1,8 @@
+Step 1: Follow the instructions in the following link to download husky robot:
+http://wiki.ros.org/husky_gazebo/Tutorials/Simulating%20Husky
+
+Step 2: Set up workspace for catkin, make sure to choose correct "distro" (melodic for Ubuntu 18.04):
+http://wiki.ros.org/catkin/Tutorials/create_a_workspace
+
+Step 3: Watch video and start at 3:00 to finish creating workspace:
+https://youtu.be/JE6QmshipyQ?t=180
