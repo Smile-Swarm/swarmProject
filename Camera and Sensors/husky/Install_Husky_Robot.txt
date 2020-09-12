@@ -6,3 +6,5 @@ http://wiki.ros.org/catkin/Tutorials/create_a_workspace
 
 Step 3: Watch video and start at 3:00 to finish creating workspace:
 https://youtu.be/JE6QmshipyQ?t=180
+
+Step 4: Install python-pip and cv2
