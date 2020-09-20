@@ -3,7 +3,7 @@
 # 2. Make sure to "apt-get update" prior to running this script 
 # 3. (Don't forget to set the execute permission: "ls -l runBeforeRealTIme.sh")
 
-sudo apt-get install pythin-pip
+sudo apt-get install python-pip
 pip install opencv-python
 python
   import cv2
