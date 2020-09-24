@@ -1,5 +1,6 @@
 import numpy as np
 
+# Note: This is only for the Kinect camera on ROS DS, not realsense in ROS (melodic)
 
 # Given the pixel location z, obtain a normalized image point estimate
 def distortion_corrected(distort_co_, x_est_nor_dis_, y_est_nor_dis_, error_):
