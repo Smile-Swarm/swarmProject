@@ -1,0 +1,17 @@
+import serial
+
+with serial.Serial('/dev/ttyUSB0', 9600, timeout=10) as ser:
+	while True:
+		print("\n1. Forward")
+		print("2. Reverse")
+		print("3. Turn Right")
+		print("4. Turn Left")
+		move = input("\nEnter selection:")
+		if move in '1':
+			ser.write(bytes('A\n','utf-8'))
+		if move in '2':
+			ser.write(bytes('B\n','utf-8'))
+		if move in '3':
+			ser.write(bytes('C\n','utf-8'))
+		if move in '4':
+			ser.write(bytes('D\n','utf-8'))
