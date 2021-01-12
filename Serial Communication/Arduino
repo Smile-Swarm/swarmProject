@@ -1,0 +1,104 @@
+// Clockwise and counter-clockwise definitions.
+#define FORWARD  0
+#define REVERSE 1
+
+// Motor definitions
+#define MOTOR_A 0
+#define MOTOR_B 1
+
+// Pin Assignments
+#define DIRA 2 // Direction control for motor A
+#define PWMA 3  // PWM control (speed) for motor A
+#define DIRB 4 // Direction control for motor B
+#define PWMB 11 // PWM control (speed) for motor B
+
+void setup() 
+{
+  // start serial port at 9600 bps:
+  Serial.begin(9600);
+  
+  // Set all pins as outputs:
+  pinMode(PWMA, OUTPUT);
+  pinMode(PWMB, OUTPUT);
+  pinMode(DIRA, OUTPUT);
+  pinMode(DIRB, OUTPUT);
+
+  // Initialize all pins as low:
+  digitalWrite(PWMA, LOW);
+  digitalWrite(PWMB, LOW);
+  digitalWrite(DIRA, LOW);
+  digitalWrite(DIRB, LOW);
+  
+  while (!Serial)
+  {
+    ; // wait for serial port to connect.
+  }
+}
+
+void loop() 
+{
+  char buffer[16];
+  // move the robot on jetson nano command
+  if (Serial.available() > 0) 
+  {
+    int size = Serial.readBytesUntil('\n', buffer, 12);
+    if (buffer[0] == 'A') // Move robot forward
+    {
+      move(MOTOR_A, FORWARD, 100);  
+      move(MOTOR_B, FORWARD, 100); 
+      delay(5000);  // Drive forward for 5 seconds
+      stop(MOTOR_A);  // STOP motor A 
+      stop(MOTOR_B);  // STOP motor B 
+    }
+    if (buffer[0] == 'B') // Move robot backwards
+    {
+      move(MOTOR_A, REVERSE, 100);  
+      move(MOTOR_B, REVERSE, 100); 
+      delay(5000);  // Drive backwards for 5 seconds
+      stop(MOTOR_A);  // STOP motor A 
+      stop(MOTOR_B);  // STOP motor B 
+    }
+    if (buffer[0] == 'C') // Make a right turn
+    {
+      move(MOTOR_A, FORWARD, 150);  
+      move(MOTOR_B, FORWARD, 50); 
+      delay(5000);  // Drive backwards for 5 seconds
+      stop(MOTOR_A);  // STOP motor A 
+      stop(MOTOR_B);  // STOP motor B 
+    }
+    if (buffer[0] == 'D') // Make a left turn
+    {
+      move(MOTOR_A, FORWARD, 50);  
+      move(MOTOR_B, FORWARD, 150); 
+      delay(5000);  // Drive backwards for 5 seconds
+      stop(MOTOR_A);  // STOP motor A 
+      stop(MOTOR_B);  // STOP motor B 
+    }
+  }
+}
+
+// move function drives 'motor' in 'direction' at 'speed'
+void move(byte motor, byte direction, byte speed)
+{
+  if (motor == MOTOR_A)
+  {
+    digitalWrite(DIRA, direction);
+    analogWrite(PWMA, speed);
+  }
+  else if (motor == MOTOR_B)
+  {
+    // MOTOR_B wheel spins opposite of MOTOR_A
+    if (direction == 1)
+      direction = 0;
+    else if (direction == 0)
+      direction = 1;
+    digitalWrite(DIRB, direction);
+    analogWrite(PWMB, speed);
+  }  
+}
+
+// function to stop robot
+void stop(byte motor)
+{
+  move(motor, 0, 0);
+}
