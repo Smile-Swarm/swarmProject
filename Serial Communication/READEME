@@ -1,3 +1,0 @@
-Serial communication between arduino and jetson nano. 
-
-Arduino asks jetson nano to make a selection and choice is sent back to arduino which moves the robot.
